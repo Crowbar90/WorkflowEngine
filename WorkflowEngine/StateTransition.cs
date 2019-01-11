@@ -6,8 +6,14 @@ namespace WorkflowEngine
 {
     public abstract class StateTransitionBase
     {
-        public State StartState { get; set; }
-        public State EndState { get; set; }
+        public State StartState { get; }
+        public State EndState { get; }
+
+        protected StateTransitionBase(State startState, State endState)
+        {
+            StartState = startState;
+            EndState = endState;
+        }
 
         protected virtual bool CanBePerformed(out string errorMessage)
         {
@@ -23,6 +29,20 @@ namespace WorkflowEngine
                 throw new InvalidOperationException($"Transition cannot be performed: {error}");
 
             InnerPerform();
+        }
+
+        protected bool Equals(StateTransitionBase other)
+        {
+            return Equals(StartState, other.StartState) && Equals(EndState, other.EndState);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((StartState != null ? StartState.GetHashCode() : 0) * 397) ^ (EndState != null ? EndState.GetHashCode() : 0);
+            }
         }
     }
 }

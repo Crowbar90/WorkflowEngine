@@ -8,11 +8,7 @@ namespace WorkflowEngine
     {
         private State _currentState;
 
-        public State CurrentState
-        {
-            get => _currentState ?? this.StartingState();
-            private set => _currentState = value;
-        }
+        public State CurrentState => _currentState ?? this.StartingState();
 
         public IEnumerable<StateTransitionBase> Transitions { get; set; } = new List<StateTransitionBase>();
 
@@ -29,7 +25,7 @@ namespace WorkflowEngine
 
         public void MoveToState(State nextState)
         {
-            var transition = AvailableTransitionsFromCurrentState.SingleOrDefault(t => t.EndState == nextState);
+            var transition = AvailableTransitionsFromCurrentState.SingleOrDefault(t => Equals(t.EndState, nextState));
                 
             if (transition is null)
                 throw new InvalidOperationException("Invalid next state.");
@@ -37,7 +33,7 @@ namespace WorkflowEngine
             try
             {
                 transition.Perform();
-                CurrentState = nextState;
+                _currentState = nextState;
             }
             catch (Exception e)
             {
@@ -49,14 +45,14 @@ namespace WorkflowEngine
     public static class WorkflowStateExtensions
     {
         public static bool BelongsToWorkflow(this State state, Workflow workflow) =>
-            workflow.Transitions.Any(t => t.StartState == state || t.EndState == state);
+            workflow.Transitions.Any(t => Equals(t.StartState, state) || Equals(t.EndState, state));
 
         public static bool HasNextStateInWorkflow(this State state, Workflow workflow)
         {
             if (!state.BelongsToWorkflow(workflow))
                 throw new InvalidOperationException("State does not belong to workflow.");
 
-            return workflow.Transitions.Any(t => t.StartState == state);
+            return workflow.Transitions.Any(t => Equals(t.StartState, state));
         }
 
         public static bool HasPreviousStateInWorkflow(this State state, Workflow workflow)
@@ -64,12 +60,7 @@ namespace WorkflowEngine
             if (!state.BelongsToWorkflow(workflow))
                 throw new InvalidOperationException("State does not belong to workflow.");
 
-            return workflow.Transitions.Any(t => t.EndState == state);
-        }
-
-        public static bool IsStartStateInWorkflow(this State state, Workflow workflow)
-        {
-            return state.HasNextStateInWorkflow(workflow) && !state.HasPreviousStateInWorkflow(workflow);
+            return workflow.Transitions.Any(t => Equals(t.EndState, state));
         }
 
         public static bool IsEndStateInWorkflow(this State state, Workflow workflow)
@@ -82,8 +73,10 @@ namespace WorkflowEngine
             try
             {
                 var result = workflow.Transitions
-                    .SingleOrDefault(t => t.StartState.IsStartStateInWorkflow(workflow))
-                    ?.StartState;
+                    .Select(t => t.StartState)
+                    .Distinct()
+                    .SingleOrDefault(s => s.IsStartState);
+
                 if (result is null)
                 {
                     throw new InvalidOperationException("Workflow has no starting state.");
