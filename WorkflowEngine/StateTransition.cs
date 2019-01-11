@@ -8,8 +8,14 @@ namespace WorkflowEngine
     {
         public State StartState { get; set; }
         public State EndState { get; set; }
-        protected abstract bool CanBePerformed(out string errorMessage);
-        protected abstract void InnerPerform();
+
+        protected virtual bool CanBePerformed(out string errorMessage)
+        {
+            errorMessage = null;
+            return true;
+        }
+
+        protected virtual void InnerPerform() { }
 
         public void Perform()
         {
