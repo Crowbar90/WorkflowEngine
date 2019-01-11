@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WorkflowEngine
 {
-    public abstract class StateTransitionBase
+    public abstract class StateTransitionBase : IEquatable<StateTransitionBase>
     {
         public State StartState { get; }
         public State EndState { get; }
@@ -31,9 +29,21 @@ namespace WorkflowEngine
             InnerPerform();
         }
 
-        protected bool Equals(StateTransitionBase other)
+        /// <inheritdoc />
+        public bool Equals(StateTransitionBase other)
         {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
             return Equals(StartState, other.StartState) && Equals(EndState, other.EndState);
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((StateTransitionBase) obj);
         }
 
         /// <inheritdoc />
