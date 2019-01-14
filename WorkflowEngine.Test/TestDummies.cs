@@ -1,11 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace WorkflowEngine.Test
 {
-    [ExcludeFromCodeCoverage]
     public static class TestDummies
     {
         public static Dictionary<string, State> DummyStates = new[]
@@ -36,7 +34,6 @@ namespace WorkflowEngine.Test
         };
     }
 
-    [ExcludeFromCodeCoverage]
     internal class DummyTransition : StateTransitionBase
     {
         private readonly bool _passing;
@@ -56,7 +53,6 @@ namespace WorkflowEngine.Test
         protected override void InnerPerform() { }
     }
 
-    [ExcludeFromCodeCoverage]
     public class AvailableTransitionsTestDataGenerator : IEnumerable<object[]>
     {
         /// <inheritdoc />

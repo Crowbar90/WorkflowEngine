@@ -1,13 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Shouldly;
 using Xunit;
 
 namespace WorkflowEngine.Test
 {
-    [ExcludeFromCodeCoverage]
     public class WorkflowTests
     {
         private readonly Workflow _workflow;

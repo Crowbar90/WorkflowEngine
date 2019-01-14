@@ -2,12 +2,12 @@
 
 namespace WorkflowEngine
 {
-    public abstract class StateTransitionBase : IEquatable<StateTransitionBase>
+    public class StateTransitionBase : IEquatable<StateTransitionBase>
     {
         public State StartState { get; }
         public State EndState { get; }
 
-        protected StateTransitionBase(State startState, State endState)
+        public StateTransitionBase(State startState, State endState)
         {
             StartState = startState;
             EndState = endState;
@@ -42,8 +42,7 @@ namespace WorkflowEngine
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((StateTransitionBase) obj);
+            return obj.GetType() == GetType() && Equals((StateTransitionBase) obj);
         }
 
         /// <inheritdoc />

@@ -4,7 +4,7 @@ namespace WorkflowEngine
 {
     public class State : IEquatable<State>
     {
-        public string Code { get; set; }
+        public string Code { get; }
         public bool IsStartState { get; set; }
 
         public State(string code) : this(code, false) { }
@@ -19,8 +19,7 @@ namespace WorkflowEngine
         public bool Equals(State other)
         {
             if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return string.Equals(Code, other.Code);
+            return ReferenceEquals(this, other) || string.Equals(Code, other.Code);
         }
 
         /// <inheritdoc />
@@ -28,8 +27,7 @@ namespace WorkflowEngine
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((State) obj);
+            return obj.GetType() == GetType() && Equals((State) obj);
         }
 
         /// <inheritdoc />
