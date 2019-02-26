@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using Shouldly;
 using Xunit;
 
@@ -35,6 +33,7 @@ namespace WorkflowEngine.Test
         public void SameCodeStatesAreEqual(State stateA, State stateB)
         {
             stateA.ShouldBe(stateB);
+            stateA.Equals(stateB).ShouldBe(true);
         }
 
         [Theory]
@@ -42,6 +41,7 @@ namespace WorkflowEngine.Test
         public void DifferentCodeStatesAreNotEqual(State stateA, State stateB)
         {
             stateA.ShouldNotBe(stateB);
+            stateA.Equals(stateB).ShouldBe(false);
         }
 
         [Theory]
