@@ -31,6 +31,7 @@ namespace WorkflowEngine.Test
         public void SameStatesTransitionsAreEqual(StateTransitionBase transitionA, StateTransitionBase transitionB)
         {
             transitionA.ShouldBe(transitionB);
+            transitionA.GetHashCode().ShouldBe(transitionB.GetHashCode());
             transitionA.Equals((object)transitionB).ShouldBe(true);
         }
 

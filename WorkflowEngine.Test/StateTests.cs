@@ -33,6 +33,7 @@ namespace WorkflowEngine.Test
         public void SameCodeStatesAreEqual(State stateA, State stateB)
         {
             stateA.ShouldBe(stateB);
+            stateA.GetHashCode().ShouldBe(stateB.GetHashCode());
             stateA.Equals(stateB).ShouldBe(true);
         }
 
